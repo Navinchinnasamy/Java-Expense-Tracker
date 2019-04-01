@@ -6,12 +6,11 @@ public class Main {
 
     protected static boolean isAuthenticated = false;
     protected static ArrayList<Expense> expenses = new ArrayList<>();
+    protected static MySQLDBCon conn = new MySQLDBCon();
 
     public static void main(String[] args) {
         Main obj = new Main();
-
         obj.authenticate();
-
     }
 
     private void authenticate(){
@@ -28,6 +27,7 @@ public class Main {
             isAuthenticated = true;
             System.out.println("You are authenticated successfully!");
             System.out.println("###*********************$$$************************###");
+            displayExpenses();
             addExpense();
         } else {
             isAuthenticated = false;
@@ -37,6 +37,10 @@ public class Main {
     }
 
     private void addExpense(){
+        System.out.println("\n");
+        System.out.println("###*********************$$$************************###");
+        System.out.println("Add New Expense:");
+        System.out.println("----------------");
         Scanner scn = new Scanner(System.in);
         System.out.print("Enter amount spent: ");
         String expAmt = scn.nextLine();
@@ -44,7 +48,7 @@ public class Main {
         String expDesc = scn.nextLine();
 
         Expense e = new Expense(Float.parseFloat(expAmt), expDesc);
-        expenses.add(e);
+        conn.addNewExpense(e);
 
         System.out.print("Want to add more Expense [y/n]? ");
         char choice = scn.next().charAt(0);
@@ -58,9 +62,11 @@ public class Main {
     }
 
     protected void displayExpenses(){
+        expenses = conn.getAllExpenses();
         System.out.println("\n");
         System.out.println("###*********************$$$************************###");
         System.out.println("Added Expense:");
+        System.out.println("--------------");
         for(Expense e : expenses){
             System.out.print(e.getDescription()+" \t - "+e.getAmout()+"\n");
         }
