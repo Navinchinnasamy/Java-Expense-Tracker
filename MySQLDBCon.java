@@ -3,18 +3,22 @@ import java.util.ArrayList;
 
 public class MySQLDBCon {
     public Connection conn;
+	private boolean isConnected;
+	private ArrayList<Expense> expenses;
 
     public MySQLDBCon() {
+		expenses = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/room_expenses", "room_exp", "12345");
+			isConnected = true;
         } catch (Exception e) {
-            System.out.println(e);
+            // System.out.println(e);
+			isConnected = false;
         }
     }
 
-    public ArrayList getAllExpenses() {
-        ArrayList<Expense> expenses = new ArrayList<>();
+    public ArrayList<Expense> getAllExpenses() {
         try {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("SELECT id, amount, description, purchased_at FROM expenses");
@@ -23,7 +27,7 @@ public class MySQLDBCon {
                 expenses.add(exp);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            // System.out.println(e);
         }
         return expenses;
     }
@@ -42,7 +46,10 @@ public class MySQLDBCon {
                 retID = res.getInt(1);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            // System.out.println(e);
+			if(!isConnected){
+				expenses.add(exp);
+			}
         }
         return retID;
     }
