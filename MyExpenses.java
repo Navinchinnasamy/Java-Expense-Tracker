@@ -1,48 +1,81 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 import java.util.ArrayList;
 
-public class MyExpenses extends Frame implements ActionListener {
-	private Label amtLabel;
-	private Label descLabel;
-	private TextField amtInput;
-	private TextField descInput;
-	private Button addBtn;
-	private ArrayList<Expense> expenses;
+public class MyExpenses implements ActionListener {
+	boolean isAuthenticated = false;
+    ArrayList<Expense> expenses = new ArrayList<>();
+
+	JTextField amtField = new JTextField(10);
+	JTextField descField = new JTextField(50);
+	JButton addBtn = new JButton("Add");
+	JButton viewBtn = new JButton("View");
 	
 	public MyExpenses(){
-		setLayout(new FlowLayout());
+		JFrame frame = new JFrame("Expense Manager");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		amtLabel = new Label("Amount: ");
-		add(amtLabel);
-		amtInput = new TextField(10);
-		add(amtInput);
+		JMenuBar menubar = new JMenuBar();
+		JMenu createMenu = new JMenu("Add Expense");
+		JMenu listMenu = new JMenu("List Expenses");
+		menubar.add(createMenu);
+		menubar.add(listMenu);
 		
-		descLabel = new Label("Description: ");
-		add(descLabel);
-		descInput = new TextField(50);
-		add(descInput);
+		JLabel amtLabel = new JLabel("Enter Amount");		
+		JLabel descLabel = new JLabel("Enter Description");
 		
-		addBtn = new Button("Add");
-		add(addBtn);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+		panel.add(amtLabel);
+		panel.add(amtField);
+		panel.add(Box.createVerticalGlue());
+		panel.add(descLabel);
+		panel.add(descField);
+		panel.add(Box.createVerticalGlue());
+		panel.add(addBtn);
+		panel.add(Box.createVerticalGlue());
+		panel.add(viewBtn);
+		
+		frame.add(panel);
+		frame.pack();
+        frame.setVisible(true);	
 		
 		addBtn.addActionListener(this);
+		viewBtn.addActionListener(this);
+	}
 		
-		setTitle("My Expense Tracker");
-		setSize(600, 400);
-		setVisible(true);
+	public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addBtn) {
+            String amtIn = amtField.getText();
+            Float amt = Float.parseFloat(amtIn);
+			String desc = descField.getText();
+			Expense exp = new Expense(amt, desc);
+			expenses.add(exp);
+			clearInputs();
+        }
+		if (e.getSource() == viewBtn) {
+            displayExpenses();
+        }
+    }
+	
+	public void clearInputs(){
+		amtField.setText("");
+		descField.setText("");
 	}
 	
+	protected void displayExpenses(){
+        System.out.println("\n");
+        System.out.println("###*********************$$$************************###");
+        System.out.println("Added Expense:");
+        for(Expense e : expenses){
+            System.out.print(e.getDescription()+" \t - "+e.getAmout()+"\n");
+        }
+    }
+		
 	public static void main(String[] args){
 		new MyExpenses();
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e){
-		Float amt = Float.parseFloat(amtInput.getText());
-		String desc = descInput.getText();
-		Expense exp = new Expense(amt, desc);
-		expenses.add(exp);
-		System.out.println(amt + " for "+ desc);
 	}
 }
