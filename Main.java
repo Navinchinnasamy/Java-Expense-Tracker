@@ -13,20 +13,27 @@ public class Main implements ActionListener {
     ArrayList<String> creds = new ArrayList<String>();
 
 	JTextField unameField = new JTextField(10);
-	JTextField pswdField = new JTextField(50);
+	JTextField pswdField = new JTextField(10);
 	JButton loginBtn = new JButton("Login");
 	JFrame frame = new JFrame("Expense Manager - Login");
 	JLabel invalidMsg = new JLabel("");
 	
 	public Main(){
+		frame.setSize(350,180);
+		frame.setLocation(500,280);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
-		JLabel unameLabel = new JLabel("Enter Username");		
+		JLabel unameLabel = new JLabel("Enter Username");	
+		unameLabel.setBounds(10,20,110,25);
 		JLabel pswdLabel = new JLabel("Enter Password");
+		pswdLabel.setBounds(10,50,110,25);
+		
+		unameField.setBounds(120,20,180,25);
+		pswdField.setBounds(120,50,180,25);
+		loginBtn.setBounds(150,80,70,25);
 		
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panel.setLayout(null);
 		
 		panel.add(invalidMsg);
 		panel.add(Box.createVerticalGlue());
@@ -39,8 +46,7 @@ public class Main implements ActionListener {
 		panel.add(loginBtn);
 		panel.add(Box.createVerticalGlue());
 		
-		frame.add(panel);
-		frame.pack();
+		frame.getContentPane().add(panel);
         frame.setVisible(true);	
 		
 		loginBtn.addActionListener(this);
@@ -56,7 +62,6 @@ public class Main implements ActionListener {
 		
     public static void main(String[] args) {
         Main obj = new Main();
-        // obj.authenticate();
     }
 
     private void authenticate(String uname, String pswd){
@@ -75,7 +80,6 @@ public class Main implements ActionListener {
 		}
 		for(String c : creds){
 			String[] cred = c.split(":");
-			System.out.println(cred[0]+" -> "+cred[1]);
 			if(cred[0].equals(uname) && cred[1].equals(pswd)){
 				new MyExpenses();
 				frame.dispose();
